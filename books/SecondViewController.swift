@@ -22,6 +22,21 @@ class SecondViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
     }
+    
+    override func viewDidAppear(animated: Bool) {
+        if Business.logined() {
+            return
+        }
+        let alert = LoginAlert(viewController: self)
+        alert.show({
+            (username: String, password: String) -> Void in
+            if Business.verifyAdmin(username, password: password) {
+                print("ok")
+            } else {
+                print("fail")
+            }
+        })
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

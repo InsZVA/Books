@@ -21,7 +21,20 @@ class ForthViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-
+    override func viewDidAppear(animated: Bool) {
+        if Business.logined() {
+            return
+        }
+        let alert = LoginAlert(viewController: self)
+        alert.show({
+            (username: String, password: String) -> Void in
+            if Business.verifyAdmin(username, password: password) {
+                print("ok")
+            } else {
+                print("fail")
+            }
+        })
+    }
     /*
     // MARK: - Navigation
 

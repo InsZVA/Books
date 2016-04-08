@@ -10,7 +10,7 @@ import UIKit
 
 class BooksViewController: UITableViewController {
     
-    var data = ["a", "b", "c"]
+    var data = [[String: String]]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,12 +44,34 @@ class BooksViewController: UITableViewController {
         let cell = tableView.dequeueReusableCellWithIdentifier("reusedCell", forIndexPath: indexPath)
 
         // Configure the cell...
-        let label = cell.viewWithTag(2) as! UILabel
-        label.text = data[indexPath.row]
+        let labelName = cell.viewWithTag(2) as! UILabel
+        labelName.text = data[indexPath.row]["name"]
+        let labelId = cell.viewWithTag(1) as! UILabel
+        labelId.text = data[indexPath.row]["book_id"]
+        let labelAuthor = cell.viewWithTag(3) as! UILabel
+        labelAuthor.text = data[indexPath.row]["author"]
+        let labelYear = cell.viewWithTag(4) as! UILabel
+        labelYear.text = data[indexPath.row]["year"]
+        let labelPress = cell.viewWithTag(5) as! UILabel
+        labelPress.text = data[indexPath.row]["press"]
+        let labelPrice = cell.viewWithTag(6) as! UILabel
+        labelPrice.text = data[indexPath.row]["price"]
         return cell
     }
     
-
+    func setDataRows(data: [[String: AnyObject]]) {
+        for var i = 0;i < data.count;i++ {
+            let temp = ["book_id": data[i]["book_id"] as! String,
+                "name": data[i]["name"] as! String,
+                "press": data[i]["press"] as! String,
+                "year": String(data [i]["year"] as! NSNumber),
+                "price": String(data[i]["price"] as! NSNumber),
+                "author": data[i]["author"] as! String,
+            ]
+            self.data.append(temp)
+        }
+    }
+    
     /*
     // Override to support conditional editing of the table view.
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {

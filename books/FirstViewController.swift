@@ -10,6 +10,17 @@ import UIKit
 
 class FirstViewController: UIViewController {
     
+    @IBOutlet weak var txtBookId: UITextField!
+    @IBOutlet weak var txtBookName: UITextField!
+    @IBOutlet weak var txtAuthor: UITextField!
+    
+    @IBOutlet weak var txtType: UITextField!
+    @IBOutlet weak var txtPriceEnd: UITextField!
+    @IBOutlet weak var txtPriceStart: UITextField!
+    @IBOutlet weak var txtPress: UITextField!
+    @IBOutlet weak var txtYearStart: UITextField!
+    
+    @IBOutlet weak var txtYearEnd: UITextField!
     @IBOutlet weak var btnSearch: UIButton!
     var db:SQLiteDB!
 
@@ -20,18 +31,7 @@ class FirstViewController: UIViewController {
     }
     
     override func viewDidAppear(animated: Bool) {
-        if Business.logined() {
-            return
-        }
-        let alert = LoginAlert(viewController: self)
-        alert.show({
-            (username: String, password: String) -> Void in
-            if Business.verifyAdmin(username, password: password) {
-                print("ok")
-            } else {
-                print("fail")
-            }
-        })
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -40,8 +40,19 @@ class FirstViewController: UIViewController {
     }
     
     @IBAction func onSearchUp(sender: AnyObject) {
-        let viewC = self.storyboard?.instantiateViewControllerWithIdentifier("1")
-        self.navigationController?.pushViewController(viewC!, animated: true)
+        let viewC = self.storyboard?.instantiateViewControllerWithIdentifier("1") as! BooksViewController
+        let book_id = txtBookId.text
+        let name = txtBookName.text
+        let author = txtAuthor.text
+        let type = txtType.text
+        let press = txtPress.text
+        let yearStart = Int(txtYearStart.text!)
+        let yearEnd = Int(txtYearEnd.text!)
+        let priceStart = Float(txtPriceStart.text!)
+        let priceEnd = Float(txtPriceEnd.text!)
+        let data = Business.search(type, book_id: book_id, name: name, press: press, author: author, yearStart: yearStart, yearEnd: yearEnd, priceStart: priceStart, priceEnd: priceEnd)
+        viewC.setDataRows(data)
+        self.navigationController?.pushViewController(viewC, animated: true)
     }
     
 

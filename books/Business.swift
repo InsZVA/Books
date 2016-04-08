@@ -59,4 +59,73 @@ class Business: NSObject {
         }
         return (false, 0)
     }
+    
+    static func search(type: String?, book_id: String?, var name: String?, var press: String?, author: String?, yearStart: Int?, yearEnd: Int?, priceStart: Float?, priceEnd: Float?) -> [[String: AnyObject]] {
+        var whereClause = "select * from book where "
+        var cursor = 0
+        var parameters = [AnyObject]()
+        if book_id != nil && book_id != "" {
+            whereClause += "book_id=?"
+            parameters.append(book_id!)
+            cursor++
+        }
+        if type != nil && type != "" {
+            if cursor > 0 {
+                whereClause += " and "
+            }
+            whereClause += "type = ?"
+            parameters.append(type!)
+            cursor++
+        }
+        if name != nil && name != "" {
+            if cursor > 0 {
+                whereClause += " and "
+            }
+            name = "%" + name! + "%"
+            whereClause += "name like ?"
+            parameters.append(name!)
+            cursor++
+        }
+        if press != nil && press != "" {
+            if cursor > 0 {
+                whereClause += " and "
+            }
+            whereClause += "press like ?"
+            press = "%" + press! + "%"
+            parameters.append(press!)
+            cursor++
+        }
+        if author != nil && author != "" {
+            if cursor > 0 {
+                whereClause += " and "
+            }
+            whereClause += "author='?'"
+            parameters.append(author!)
+            cursor++
+        }
+        if yearStart != nil {
+            if cursor > 0 {
+                whereClause += " and "
+            }
+            whereClause += "year>=? and year<=?"
+            parameters.append(yearStart!)
+            parameters.append(yearEnd!)
+            cursor++
+        }
+        if priceStart != nil {
+            if cursor > 0 {
+                whereClause += " and "
+            }
+            whereClause += "price>=? and price<=?"
+            parameters.append(priceStart!)
+            parameters.append(priceEnd!)
+            cursor++
+        }
+        let db = SQLiteDB.sharedInstance()
+        let data = db.query(whereClause, parameters: parameters)
+        if data.count > 0 {
+            print(data[0]["name"] as! String)
+        }
+        return data
+    }
 }
